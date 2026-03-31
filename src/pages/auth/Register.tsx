@@ -10,8 +10,9 @@ import { useAuth } from '../../context/AuthContext';
 const Register: React.FC = () => {
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const { register } = useAuth();
   const { showToast } = useToast();
   const navigate = useNavigate();
 
@@ -19,13 +20,11 @@ const Register: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      // Simulate registration and then login
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      await login(email || 'alex@taskflow.app');
+      await register(fullName, email, password);
       showToast('Account created successfully!', 'success');
       navigate('/onboarding');
-    } catch {
-      showToast('Failed to create account', 'error');
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Failed to create account', 'error');
     } finally {
       setIsLoading(false);
     }
@@ -59,7 +58,7 @@ const Register: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            <Input label="Password" type="password" placeholder="••••••••" required helperText="Minimum 8 characters" />
+            <Input label="Password" type="password" placeholder="••••••••" required helperText="Minimum 8 characters" value={password} onChange={(e) => setPassword(e.target.value)} />
             
             <div className="flex items-start gap-2">
               <input type="checkbox" className="mt-1 rounded border-border text-primary focus:ring-primary" required id="terms" />

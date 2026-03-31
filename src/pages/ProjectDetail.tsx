@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Plus, 
@@ -23,7 +23,6 @@ import { TaskDetailModal } from '../components/tasks/TaskDetailModal';
 import { CreateTaskModal } from '../components/tasks/CreateTaskModal';
 import { EditProjectModal } from '../components/dashboard/EditProjectModal';
 import { AddMemberModal } from '../components/dashboard/AddMemberModal';
-import { mockUsers } from '../data/mockData';
 import { formatDueDate } from '../utils/dateUtils';
 import { cn } from '../utils/cn';
 
@@ -32,7 +31,11 @@ const generateId = (prefix: string) => `${prefix}_${Date.now()}`;
 const ProjectDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { projects, tasks, updateTask, deleteTask, updateProject } = useAppContext();
+  const { projects, tasks, users, updateTask, deleteTask, updateProject, refreshTasks } = useAppContext();
+
+  useEffect(() => {
+    if (id) refreshTasks(id);
+  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
   const [viewMode, setViewMode] = useState<'list' | 'board'>('list');
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -123,12 +126,12 @@ const ProjectDetail: React.FC = () => {
                 <span className="text-[10px] font-bold text-text-secondary uppercase tracking-wider">Owner</span>
                 <div className="flex items-center gap-2">
                   <img 
-                    src={mockUsers.find(u => u.id === project.ownerId)?.avatarUrl} 
+                    src={users.find(u => u.id === project.ownerId)?.avatarUrl} 
                     className="w-6 h-6 rounded-full"
                     referrerPolicy="no-referrer"
                   />
                   <span className="text-xs font-medium text-text-primary">
-                    {mockUsers.find(u => u.id === project.ownerId)?.fullName}
+                    {users.find(u => u.id === project.ownerId)?.fullName}
                   </span>
                 </div>
               </div>
@@ -145,10 +148,10 @@ const ProjectDetail: React.FC = () => {
                   {project.memberIds.map(id => (
                     <img 
                       key={id} 
-                      src={mockUsers.find(u => u.id === id)?.avatarUrl} 
+                      src={users.find(u => u.id === id)?.avatarUrl} 
                       className="w-6 h-6 rounded-full border-2 border-surface"
                       referrerPolicy="no-referrer"
-                      title={mockUsers.find(u => u.id === id)?.fullName}
+                      title={users.find(u => u.id === id)?.fullName}
                     />
                   ))}
                   <button 
@@ -235,7 +238,7 @@ const ProjectDetail: React.FC = () => {
               </thead>
               <tbody className="divide-y divide-border">
                 {filteredTasks.map(task => {
-                  const assignee = mockUsers.find(u => u.id === task.assigneeId);
+                  const assignee = users.find(u => u.id === task.assigneeId);
                   return (
                     <tr 
                       key={task.id} 
@@ -363,7 +366,7 @@ const ProjectDetail: React.FC = () => {
                               )}
                             >
                               {filteredTasks.filter(t => t.status === col.id).map((task, index) => {
-                                const assignee = mockUsers.find(u => u.id === task.assigneeId);
+                                const assignee = users.find(u => u.id === task.assigneeId);
                                 return (
                                   <Draggable key={task.id} draggableId={task.id} index={index}>
                                     {(provided, snapshot) => (

@@ -10,10 +10,10 @@ import {
 import { Task } from '../../types';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
-import { mockUsers, mockProjects } from '../../data/mockData';
 import { formatDueDate, formatRelativeTime } from '../../utils/dateUtils';
 import { cn } from '../../utils/cn';
 import { useAppContext } from '../../context/AppContext';
+import { useAuth } from '../../context/AuthContext';
 
 interface TaskDetailModalProps {
   task: Task;
@@ -22,11 +22,12 @@ interface TaskDetailModalProps {
 }
 
 export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ task, isOpen, onClose }) => {
-  const { updateTask, deleteTask } = useAppContext();
+  const { updateTask, deleteTask, users, projects } = useAppContext();
+  const { user: currentUser } = useAuth();
   const [commentText, setCommentText] = useState('');
-  
-  const assignee = mockUsers.find(u => u.id === task.assigneeId);
-  const project = mockProjects.find(p => p.id === task.projectId);
+
+  const assignee = users.find(u => u.id === task.assigneeId);
+  const project = projects.find(p => p.id === task.projectId);
 
   const handleStatusChange = (status: Task['status']) => {
     updateTask(task.id, { status });
@@ -94,7 +95,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ task, isOpen, 
             
             <div className="space-y-4">
               {task.comments.map(comment => {
-                const commentUser = mockUsers.find(u => u.id === comment.userId);
+                const commentUser = users.find(u => u.id === comment.userId);
                 return (
                   <div key={comment.id} className="flex gap-3">
                     <img 
@@ -116,9 +117,9 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ task, isOpen, 
             </div>
 
             <div className="flex gap-3 pt-2">
-              <img 
-                src={mockUsers[0].avatarUrl} 
-                alt="Me" 
+              <img
+                src={currentUser?.avatarUrl ?? undefined}
+                alt="Me"
                 className="w-8 h-8 rounded-full flex-shrink-0"
                 referrerPolicy="no-referrer"
               />

@@ -1,12 +1,13 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User } from '../types';
-import { mockUsers } from '../data/mockData';
+import { api, clearAuth } from '../lib/api';
 
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
-  login: (email: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
+  register: (fullName: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   isLoading: boolean;
 }
@@ -14,29 +15,43 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(() => {
-    const storedUser = localStorage.getItem('taskflow_user');
-    return storedUser ? JSON.parse(storedUser) : null;
-  });
-  const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const login = async (email: string) => {
-    setIsLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 800));
-    const foundUser = mockUsers.find(u => u.email === email) || mockUsers[0];
-    setUser(foundUser);
-    localStorage.setItem('taskflow_user', JSON.stringify(foundUser));
-    setIsLoading(false);
+  // Restore session on mount
+  useEffect(() => {
+    const token = localStorage.getItem('taskflow_token');
+    if (!token) {
+      setIsLoading(false);
+      return;
+    }
+    api.get<{ user: User }>('/auth/me')
+      .then(({ user }) => setUser(user))
+      .catch(() => clearAuth())
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  const login = async (email: string, password: string) => {
+    const { user, token } = await api.post<{ user: User; token: string }>('/auth/login', { email, password });
+    localStorage.setItem('taskflow_token', token);
+    localStorage.setItem('taskflow_user', JSON.stringify(user));
+    setUser(user);
+  };
+
+  const register = async (fullName: string, email: string, password: string) => {
+    const { user, token } = await api.post<{ user: User; token: string }>('/auth/register', { fullName, email, password });
+    localStorage.setItem('taskflow_token', token);
+    localStorage.setItem('taskflow_user', JSON.stringify(user));
+    setUser(user);
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('taskflow_user');
+    clearAuth();
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, register, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

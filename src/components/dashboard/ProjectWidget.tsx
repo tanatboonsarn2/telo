@@ -1,13 +1,14 @@
 import React from 'react';
 import { Project } from '../../types';
-import { mockUsers } from '../../data/mockData';
 import { Link } from 'react-router-dom';
+import { useAppContext } from '../../context/AppContext';
 
 interface ProjectWidgetProps {
   projects: Project[];
 }
 
 export const ProjectWidget: React.FC<ProjectWidgetProps> = ({ projects }) => {
+  const { users } = useAppContext();
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {projects.map(project => {
@@ -25,7 +26,7 @@ export const ProjectWidget: React.FC<ProjectWidgetProps> = ({ projects }) => {
               </div>
               <div className="flex -space-x-2">
                 {project.memberIds.slice(0, 3).map(id => {
-                  const member = mockUsers.find(u => u.id === id);
+                  const member = users.find(u => u.id === id);
                   return (
                     <img 
                       key={id} 

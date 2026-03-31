@@ -19,7 +19,7 @@ const Login: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await login(email);
+      await login(email, password);
       showToast(`Welcome back!`, 'success');
       navigate('/');
     } catch {

@@ -11,14 +11,13 @@ import {
 import { useAppContext } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/Button';
-import { mockUsers } from '../data/mockData';
 import { Link } from 'react-router-dom';
 import { cn } from '../utils/cn';
 import { CreateProjectModal } from '../components/dashboard/CreateProjectModal';
 
 const Projects: React.FC = () => {
   const { user } = useAuth();
-  const { projects } = useAppContext();
+  const { projects, users } = useAppContext();
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -126,7 +125,7 @@ const Projects: React.FC = () => {
                   <div className="flex items-center justify-between pt-2">
                     <div className="flex -space-x-2">
                       {project.memberIds.slice(0, 4).map(id => {
-                        const member = mockUsers.find(u => u.id === id);
+                        const member = users.find(u => u.id === id);
                         return (
                           <img 
                             key={id} 
@@ -170,7 +169,7 @@ const Projects: React.FC = () => {
               <tbody className="divide-y divide-border">
                 {filteredProjects.map(project => {
                   const progress = Math.round((project.taskStats.done / project.taskStats.total) * 100) || 0;
-                  const owner = mockUsers.find(u => u.id === project.ownerId);
+                  const owner = users.find(u => u.id === project.ownerId);
                   return (
                     <tr 
                       key={project.id} 
@@ -211,7 +210,7 @@ const Projects: React.FC = () => {
                           {project.memberIds.slice(0, 3).map(id => (
                             <img 
                               key={id} 
-                              src={mockUsers.find(u => u.id === id)?.avatarUrl} 
+                              src={users.find(u => u.id === id)?.avatarUrl} 
                               className="w-6 h-6 rounded-full border-2 border-surface"
                               referrerPolicy="no-referrer"
                             />

@@ -8,11 +8,12 @@ import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Badge } from '../components/ui/Badge';
-import { mockUsers } from '../data/mockData';
+import { useAppContext } from '../context/AppContext';
 import { cn } from '../utils/cn';
 
 const Settings: React.FC = () => {
   const { user } = useAuth();
+  const { users } = useAppContext();
   const [activeTab, setActiveTab] = useState<'profile' | 'workspace'>('profile');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -145,7 +146,7 @@ const Settings: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
-                  {mockUsers.map(member => (
+                  {users.map(member => (
                     <tr key={member.id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
