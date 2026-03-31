@@ -17,7 +17,7 @@ export const ProjectWidget: React.FC<ProjectWidgetProps> = ({ projects }) => {
           <Link 
             key={project.id} 
             to={`/projects/${project.id}`}
-            className="card p-5 hover:shadow-md transition-all group"
+            className="card p-5 hover:bg-hover transition-all group"
           >
             <div className="flex items-start justify-between mb-4">
               <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary font-bold">

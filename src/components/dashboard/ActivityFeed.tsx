@@ -25,7 +25,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({ notifications }) => 
       <div className="flex-1 overflow-y-auto scrollbar-hide">
         {notifications.length > 0 ? (
           notifications.map(notif => (
-            <div key={notif.id} className="p-4 border-b border-border flex gap-3 items-start hover:bg-gray-50 transition-colors">
+            <div key={notif.id} className="p-4 border-b border-border flex gap-3 items-start hover:bg-hover transition-colors">
               <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0 mt-0.5">
                 {getIcon(notif.type)}
               </div>

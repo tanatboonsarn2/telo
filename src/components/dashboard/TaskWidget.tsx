@@ -24,7 +24,7 @@ export const TaskWidget: React.FC<TaskWidgetProps> = ({ tasks, onTaskClick }) =>
           sortedTasks.map(task => (
             <div 
               key={task.id} 
-              className="p-4 border-b border-border hover:bg-gray-50 transition-colors cursor-pointer group"
+              className="p-4 border-b border-border hover:bg-hover transition-colors cursor-pointer group"
               onClick={() => onTaskClick(task)}
             >
               <div className="flex items-start gap-3">

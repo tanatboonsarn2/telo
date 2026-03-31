@@ -1,15 +1,16 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #4F46E5;
-  --color-primary-hover: #4338CA;
-  --color-surface: #FFFFFF;
-  --color-background: #F9FAFB;
-  --color-sidebar-bg: #111827;
-  --color-sidebar-text: #D1D5DB;
-  --color-text-primary: #111827;
-  --color-text-secondary: #6B7280;
-  --color-border: #E5E7EB;
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-surface: var(--surface);
+  --color-background: var(--background);
+  --color-sidebar-bg: var(--sidebar-bg);
+  --color-sidebar-text: var(--sidebar-text);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-border: var(--border);
+  --color-hover: var(--hover);
   --color-success: #10B981;
   --color-warning: #F59E0B;
   --color-error: #EF4444;
@@ -18,8 +19,34 @@
 }
 
 @layer base {
+  :root {
+    --primary: #4F46E5;
+    --primary-hover: #4338CA;
+    --surface: #FFFFFF;
+    --background: #F9FAFB;
+    --sidebar-bg: #FFFFFF;
+    --sidebar-text: #4B5563;
+    --text-primary: #111827;
+    --text-secondary: #6B7280;
+    --border: #E5E7EB;
+    --hover: #F3F4F6;
+  }
+
+  .dark {
+    --primary: #6366F1;
+    --primary-hover: #4F46E5;
+    --surface: #1F2937;
+    --background: #111827;
+    --sidebar-bg: #111827;
+    --sidebar-text: #D1D5DB;
+    --text-primary: #F9FAFB;
+    --text-secondary: #9CA3AF;
+    --border: #374151;
+    --hover: #374151;
+  }
+
   body {
-    @apply bg-background text-text-primary font-sans antialiased;
+    @apply bg-background text-text-primary font-sans antialiased transition-colors duration-200;
   }
 }
 

@@ -32,7 +32,7 @@ const generateId = (prefix: string) => `${prefix}_${Date.now()}`;
 const ProjectDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { projects, tasks, updateTask, deleteTask } = useAppContext();
+  const { projects, tasks, updateTask, deleteTask, updateProject } = useAppContext();
   const [viewMode, setViewMode] = useState<'list' | 'board'>('list');
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -320,7 +320,7 @@ const ProjectDetail: React.FC = () => {
               <div 
                 {...provided.droppableProps}
                 ref={provided.innerRef}
-                className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide"
+                className="flex gap-6 overflow-x-auto pb-4"
               >
                 {project.columns.map((col, index) => (
                   <Draggable key={col.id} draggableId={col.id} index={index}>

@@ -1,31 +1,14 @@
 import React, { useState } from 'react';
-import { Outlet, Navigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { TopNav } from './TopNav';
-import { useAuth } from '../../context/AuthContext';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, LayoutDashboard, CheckSquare, FolderKanban, Settings } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import { cn } from '../../utils/cn';
 
 export const AppLayout: React.FC = () => {
-  const { isAuthenticated, isLoading } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  if (isLoading) {
-    return (
-      <div className="h-screen w-full flex items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
-          <p className="text-sm font-medium text-text-secondary">Loading TaskFlow...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
 
   const mobileNavItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
@@ -54,16 +37,16 @@ export const AppLayout: React.FC = () => {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 left-0 w-72 bg-sidebar-bg z-[70] lg:hidden flex flex-col"
+              className="fixed inset-y-0 left-0 w-72 bg-sidebar-bg z-[70] lg:hidden flex flex-col border-r border-border"
             >
-              <div className="h-16 flex items-center justify-between px-6 border-b border-gray-800">
+              <div className="h-16 flex items-center justify-between px-6 border-b border-border">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                     <FolderKanban className="w-5 h-5 text-white" />
                   </div>
-                  <span className="font-bold text-xl text-white">TaskFlow</span>
+                  <span className="font-bold text-xl text-text-primary">TaskFlow</span>
                 </div>
-                <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 hover:bg-gray-800 rounded-lg text-gray-400">
+                <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 hover:bg-background rounded-lg text-text-secondary">
                   <X className="w-6 h-6" />
                 </button>
               </div>
@@ -75,7 +58,7 @@ export const AppLayout: React.FC = () => {
                     onClick={() => setIsMobileMenuOpen(false)}
                     className={({ isActive }) => cn(
                       'flex items-center gap-4 px-4 py-3 rounded-xl transition-all',
-                      isActive ? 'bg-primary text-white' : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                      isActive ? 'bg-primary text-white' : 'text-text-secondary hover:bg-background hover:text-text-primary'
                     )}
                   >
                     <item.icon className="w-6 h-6" />

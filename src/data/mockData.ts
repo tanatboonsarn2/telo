@@ -1,5 +1,23 @@
 import { User, Project, Task, Notification } from '../types';
 
+// Helper to get relative dates
+const now = new Date();
+const daysAgo = (days: number) => {
+  const d = new Date(now);
+  d.setDate(d.getDate() - days);
+  return d.toISOString();
+};
+const daysFromNow = (days: number) => {
+  const d = new Date(now);
+  d.setDate(d.getDate() + days);
+  return d.toISOString().split('T')[0];
+};
+const monthsAgo = (months: number) => {
+  const d = new Date(now);
+  d.setMonth(d.getMonth() - months);
+  return d.toISOString();
+};
+
 export const mockUsers: User[] = [
   {
     id: "usr_001",
@@ -7,7 +25,7 @@ export const mockUsers: User[] = [
     email: "alex@taskflow.app",
     role: "admin",
     avatarUrl: "https://i.pravatar.cc/150?u=usr_001",
-    createdAt: "2025-09-01T08:00:00Z"
+    createdAt: monthsAgo(6)
   },
   {
     id: "usr_002",
@@ -15,7 +33,7 @@ export const mockUsers: User[] = [
     email: "maria@taskflow.app",
     role: "manager",
     avatarUrl: "https://i.pravatar.cc/150?u=usr_002",
-    createdAt: "2025-09-03T09:15:00Z"
+    createdAt: monthsAgo(5)
   },
   {
     id: "usr_003",
@@ -23,7 +41,7 @@ export const mockUsers: User[] = [
     email: "james@taskflow.app",
     role: "member",
     avatarUrl: "https://i.pravatar.cc/150?u=usr_003",
-    createdAt: "2025-09-05T11:00:00Z"
+    createdAt: monthsAgo(4)
   },
   {
     id: "usr_004",
@@ -31,7 +49,7 @@ export const mockUsers: User[] = [
     email: "priya@taskflow.app",
     role: "member",
     avatarUrl: "https://i.pravatar.cc/150?u=usr_004",
-    createdAt: "2025-09-10T14:30:00Z"
+    createdAt: monthsAgo(3)
   }
 ];
 
@@ -43,8 +61,8 @@ export const mockProjects: Project[] = [
     ownerId: "usr_002",
     memberIds: ["usr_001", "usr_002", "usr_003", "usr_004"],
     status: "active",
-    dueDate: "2026-04-30",
-    createdAt: "2026-01-10T09:00:00Z",
+    dueDate: daysFromNow(30),
+    createdAt: daysAgo(60),
     taskStats: {
       total: 24,
       todo: 8,
@@ -66,8 +84,8 @@ export const mockProjects: Project[] = [
     ownerId: "usr_001",
     memberIds: ["usr_001", "usr_002", "usr_004"],
     status: "active",
-    dueDate: "2026-06-15",
-    createdAt: "2026-02-01T10:00:00Z",
+    dueDate: daysFromNow(75),
+    createdAt: daysAgo(45),
     taskStats: {
       total: 31,
       todo: 15,
@@ -89,8 +107,8 @@ export const mockProjects: Project[] = [
     ownerId: "usr_003",
     memberIds: ["usr_002", "usr_003"],
     status: "active",
-    dueDate: "2026-03-28",
-    createdAt: "2026-02-15T08:30:00Z",
+    dueDate: daysFromNow(5),
+    createdAt: daysAgo(30),
     taskStats: {
       total: 12,
       todo: 1,
@@ -116,8 +134,8 @@ export const mockTasks: Task[] = [
     status: "done",
     priority: "high",
     assigneeId: "usr_003",
-    dueDate: "2026-02-20",
-    createdAt: "2026-01-12T10:00:00Z",
+    dueDate: daysAgo(10).split('T')[0],
+    createdAt: daysAgo(40),
     subtasks: [
       { id: "st_001a", title: "Run desktop Lighthouse", completed: true },
       { id: "st_001b", title: "Run mobile Lighthouse", completed: true },
@@ -128,7 +146,7 @@ export const mockTasks: Task[] = [
         id: "cmt_001",
         userId: "usr_003",
         text: "All scores are in — performance is averaging 58 on mobile. Sharing the full report now.",
-        createdAt: "2026-02-19T15:30:00Z"
+        createdAt: daysAgo(11)
       }
     ]
   },
@@ -140,8 +158,8 @@ export const mockTasks: Task[] = [
     status: "inReview",
     priority: "urgent",
     assigneeId: "usr_004",
-    dueDate: "2026-04-05",
-    createdAt: "2026-03-01T09:00:00Z",
+    dueDate: daysFromNow(5),
+    createdAt: daysAgo(20),
     subtasks: [
       { id: "st_002a", title: "Review new brand guide", completed: true },
       { id: "st_002b", title: "Create 3 hero variants", completed: true },
@@ -152,13 +170,13 @@ export const mockTasks: Task[] = [
         id: "cmt_002",
         userId: "usr_002",
         text: "Variant B is looking strong — can we also try a version with the product screenshot on the right?",
-        createdAt: "2026-03-28T11:00:00Z"
+        createdAt: daysAgo(2)
       },
       {
         id: "cmt_003",
         userId: "usr_004",
         text: "On it! Will have it ready by tomorrow morning.",
-        createdAt: "2026-03-28T11:45:00Z"
+        createdAt: daysAgo(1)
       }
     ]
   },
@@ -170,8 +188,8 @@ export const mockTasks: Task[] = [
     status: "inProgress",
     priority: "medium",
     assigneeId: "usr_003",
-    dueDate: "2026-04-10",
-    createdAt: "2026-03-10T13:00:00Z",
+    dueDate: daysFromNow(10),
+    createdAt: daysAgo(15),
     subtasks: [],
     comments: []
   },
@@ -183,59 +201,59 @@ export const mockTasks: Task[] = [
     status: "done",
     priority: "urgent",
     assigneeId: "usr_001",
-    dueDate: "2026-02-28",
-    createdAt: "2026-02-02T08:00:00Z",
+    dueDate: daysAgo(5).split('T')[0],
+    createdAt: daysAgo(35),
     subtasks: [
       { id: "st_004a", title: "Engineering sync meeting", completed: true },
-      { "id": "st_004b", "title": "Update feature list in PRD", "completed": true }
+      { id: "st_004b", title: "Update feature list in PRD", completed: true }
     ],
-    "comments": []
+    comments: []
   },
   {
-    "id": "task_005",
-    "projectId": "proj_002",
-    "title": "Create launch announcement email",
-    "description": "Draft the product launch email for existing customers. Target send date: June 10.",
-    "status": "todo",
-    "priority": "medium",
-    "assigneeId": "usr_004",
-    "dueDate": "2026-05-30",
-    "createdAt": "2026-03-15T10:00:00Z",
-    "subtasks": [
-      { "id": "st_005a", "title": "Draft copy", "completed": false },
-      { "id": "st_005b", "title": "Design email template", "completed": false },
-      { "id": "st_005c", "title": "A/B test subject lines", "completed": false }
+    id: "task_005",
+    projectId: "proj_002",
+    title: "Create launch announcement email",
+    description: "Draft the product launch email for existing customers. Target send date: June 10.",
+    status: "todo",
+    priority: "medium",
+    assigneeId: "usr_004",
+    dueDate: daysFromNow(60),
+    createdAt: daysAgo(10),
+    subtasks: [
+      { id: "st_005a", title: "Draft copy", completed: false },
+      { id: "st_005b", title: "Design email template", completed: false },
+      { id: "st_005c", title: "A/B test subject lines", completed: false }
     ],
-    "comments": []
+    comments: []
   },
   {
-    "id": "task_006",
-    "projectId": "proj_002",
-    "title": "Set up analytics tracking for new features",
-    "description": "Instrument key events in Amplitude — feature adoption, drop-off points, and conversion milestones.",
-    "status": "inProgress",
-    "priority": "high",
-    "assigneeId": "usr_002",
-    "dueDate": "2026-05-15",
-    "createdAt": "2026-03-20T09:30:00Z",
-    "subtasks": [],
-    "comments": []
+    id: "task_006",
+    projectId: "proj_002",
+    title: "Set up analytics tracking for new features",
+    description: "Instrument key events in Amplitude — feature adoption, drop-off points, and conversion milestones.",
+    status: "inProgress",
+    priority: "high",
+    assigneeId: "usr_002",
+    dueDate: daysFromNow(45),
+    createdAt: daysAgo(12),
+    subtasks: [],
+    comments: []
   },
   {
-    "id": "task_007",
-    "projectId": "proj_003",
-    "title": "Archive deprecated internal scripts",
-    "description": "Identify scripts not used in the last 6 months and move to /archive with a README explaining the decision.",
-    "status": "inProgress",
-    "priority": "low",
-    "assigneeId": "usr_003",
-    "dueDate": "2026-03-25",
-    "createdAt": "2026-02-16T09:00:00Z",
-    "subtasks": [
-      { "id": "st_007a", "title": "Audit script usage logs", "completed": true },
-      { "id": "st_007b", "title": "Move to /archive folder", "completed": false }
+    id: "task_007",
+    projectId: "proj_003",
+    title: "Archive deprecated internal scripts",
+    description: "Identify scripts not used in the last 6 months and move to /archive with a README explaining the decision.",
+    status: "inProgress",
+    priority: "low",
+    assigneeId: "usr_003",
+    dueDate: daysAgo(1).split('T')[0],
+    createdAt: daysAgo(25),
+    subtasks: [
+      { id: "st_007a", title: "Audit script usage logs", completed: true },
+      { id: "st_007b", title: "Move to /archive folder", completed: false }
     ],
-    "comments": []
+    comments: []
   }
 ];
 
@@ -247,7 +265,7 @@ export const mockNotifications: Notification[] = [
     message: "Maria Chen assigned you to 'Define v2.0 feature scope'",
     relatedTaskId: "task_004",
     read: true,
-    createdAt: "2026-02-02T08:05:00Z"
+    createdAt: daysAgo(34)
   },
   {
     id: "notif_002",
@@ -256,7 +274,7 @@ export const mockNotifications: Notification[] = [
     message: "Priya Nair commented on 'Design new homepage hero section'",
     relatedTaskId: "task_002",
     read: false,
-    createdAt: "2026-03-28T11:45:00Z"
+    createdAt: daysAgo(1)
   },
   {
     id: "notif_003",
@@ -265,6 +283,6 @@ export const mockNotifications: Notification[] = [
     message: "James Okafor moved 'Audit current site performance' to Done",
     relatedTaskId: "task_001",
     read: false,
-    createdAt: "2026-02-19T16:00:00Z"
+    createdAt: daysAgo(9)
   }
 ];

@@ -5,19 +5,30 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { useToast } from '../../components/ui/Toast';
 
+import { useAuth } from '../../context/AuthContext';
+
 const Register: React.FC = () => {
+  const [email, setEmail] = useState('');
+  const [fullName, setFullName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
   const { showToast } = useToast();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      // Simulate registration and then login
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await login(email || 'alex@taskflow.app');
       showToast('Account created successfully!', 'success');
       navigate('/onboarding');
-    }, 1500);
+    } catch {
+      showToast('Failed to create account', 'error');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -33,8 +44,21 @@ const Register: React.FC = () => {
 
         <div className="card p-8 space-y-6">
           <form onSubmit={handleSubmit} className="space-y-5">
-            <Input label="Full Name" placeholder="Alex Rivera" required />
-            <Input label="Work Email" type="email" placeholder="name@company.com" required />
+            <Input 
+              label="Full Name" 
+              placeholder="Alex Rivera" 
+              required 
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+            />
+            <Input 
+              label="Work Email" 
+              type="email" 
+              placeholder="name@company.com" 
+              required 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
             <Input label="Password" type="password" placeholder="••••••••" required helperText="Minimum 8 characters" />
             
             <div className="flex items-start gap-2">

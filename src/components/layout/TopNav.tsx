@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Search, Bell, Menu, User, Settings, LogOut } from 'lucide-react';
+import { Search, Bell, Menu, User, Settings, LogOut, Sun, Moon } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useAppContext } from '../../context/AppContext';
+import { useTheme } from '../../context/ThemeContext';
 import { cn } from '../../utils/cn';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,6 +10,7 @@ import { Link, useNavigate } from 'react-router-dom';
 export const TopNav: React.FC<{ onMenuClick?: () => void }> = ({ onMenuClick }) => {
   const { user, logout } = useAuth();
   const { notifications, markNotificationRead } = useAppContext();
+  const { theme, toggleTheme } = useTheme();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -18,7 +20,7 @@ export const TopNav: React.FC<{ onMenuClick?: () => void }> = ({ onMenuClick }) 
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate('/landing');
   };
 
   return (
@@ -44,6 +46,15 @@ export const TopNav: React.FC<{ onMenuClick?: () => void }> = ({ onMenuClick }) 
       </div>
 
       <div className="flex items-center gap-2 lg:gap-4">
+        {/* Theme Toggle */}
+        <button 
+          onClick={toggleTheme}
+          className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors text-text-secondary"
+          title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+        >
+          {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+        </button>
+
         {/* Notifications */}
         <div className="relative">
           <button 
